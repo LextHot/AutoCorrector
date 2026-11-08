@@ -51,6 +51,21 @@ async def create_correction(payload: OriginalText, db: AsyncSession = Depends(ge
 # GET-request для получения истории проверок
 @app.get("/api/corrections")
 async def get_history(limit: int = 50, offset: int = 0, db: AsyncSession = Depends(get_db)) -> list[CorrectedText]:
+    # Получить хронологическую очередь истории запросов
     query = select(CorrectionHistory).order_by(desc(CorrectionHistory.created_at)).offset(offset).limit(limit)
     result = await db.execute(query)
+    # Вернуть историю
     return result.scalars().all()
+
+# DELETE-request для удаления записи из истории
+@app.delete("/api/corrections/{record_id}")
+async def delete_correction(record_id: int, db: AsyncSession = Depends(get_db)):
+    # Найти запись в истории по ID
+    record = await db.get(CorrectionHistory, record_id)
+    # Выкинуть исключение, если записи нет
+    if not record:
+        raise HTTPException(status_code=404, detail="Запись не найдена")
+    # Удалить запись
+    await db.delete(record)
+    await db.commit()
+    return None
