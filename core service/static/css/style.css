@@ -1,31 +1,54 @@
 :root {
-    /* Цветовая концепция: Dark Obsidian + Deep Forest Mint */
     --bg-base: #060c09;
     --bg-subtle: #0a130f;
     --bg-surface: #0f1c16;
     --bg-surface-elevated: #15261f;
-    --bg-glass: rgba(15, 28, 22, 0.7);
+    --bg-glass: rgba(15, 28, 22, 0.75);
 
     --border-dim: #1a2f25;
     --border-active: #2b4f3e;
     --border-focus: #10b981;
 
     --mint-bright: #2ee59d;
-    --mint-glow: rgba(46, 229, 157, 0.25);
+    --mint-glow: rgba(46, 229, 157, 0.28);
     --mint-muted: #10b981;
     --danger: #fb7185;
 
     --text-pure: #f2f7f4;
-    --text-secondary: #90a89d;
-    --text-faint: #4e675b;
+    --text-secondary: #a3c2b4;
+    --text-faint: #5d7d70;
 
     --font-ui: "Plus Jakarta Sans", sans-serif;
     --font-code: "JetBrains Mono", monospace;
-
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Кастомные scrollbars для всего интерфейса и текстовых полей */
+*::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #08110d;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: #1b352a;
+    border-radius: 4px;
+    border: 1px solid #0b1812;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: var(--mint-muted);
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #1b352a #08110d;
+}
 
 body {
     background-color: var(--bg-base);
@@ -37,7 +60,6 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* Декоративная сетка на фоне в стиле CAD / Blueprint */
 .background-grid {
     position: absolute;
     inset: 0;
@@ -62,12 +84,12 @@ body {
     margin: 0 auto;
 }
 
-/* 1. Верхний статус-бар */
+/* Навигация и статус */
 .top-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1.2rem;
     background: var(--bg-glass);
     backdrop-filter: blur(12px);
     border: 1px solid var(--border-dim);
@@ -82,13 +104,13 @@ body {
 
 .brand-glyph {
     color: var(--mint-bright);
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     filter: drop-shadow(0 0 6px var(--mint-bright));
 }
 
 .brand-name {
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 0.98rem;
     letter-spacing: -0.02em;
 }
 
@@ -96,10 +118,10 @@ body {
     font-family: var(--font-code);
     font-size: 0.65rem;
     color: var(--mint-muted);
-    background: rgba(16, 185, 129, 0.1);
-    padding: 2px 6px;
+    background: rgba(16, 185, 129, 0.12);
+    padding: 2px 7px;
     border-radius: 4px;
-    border: 1px solid rgba(16, 185, 129, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .nav-metrics {
@@ -107,7 +129,7 @@ body {
     align-items: center;
     gap: 1.25rem;
     font-family: var(--font-code);
-    font-size: 0.75rem;
+    font-size: 0.8rem;
 }
 
 .node-status {
@@ -118,28 +140,28 @@ body {
 }
 
 .status-dot {
-    width: 7px;
-    height: 7px;
+    width: 8px;
+    height: 8px;
     background: var(--mint-bright);
     border-radius: 50%;
-    box-shadow: 0 0 8px var(--mint-bright);
-    animation: pulse 2.5s infinite;
+    box-shadow: 0 0 10px var(--mint-bright);
+    animation: pulse 1.5s infinite;
 }
 
 @keyframes pulse {
     0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.85); }
+    50% { opacity: 0.3; transform: scale(0.85); }
 }
 
 .badge-telemetry {
     background: var(--bg-surface-elevated);
     border: 1px solid var(--border-active);
-    padding: 3px 8px;
+    padding: 3px 10px;
     border-radius: 6px;
     color: var(--mint-bright);
 }
 
-/* 2. Рабочее пространство (Workbench) */
+/* Рабочее пространство */
 .workbench {
     flex: 1;
     display: grid;
@@ -170,16 +192,16 @@ body {
 
 .pane-title {
     font-family: var(--font-code);
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.08em;
-    color: var(--text-secondary);
+    color: var(--text-pure);
 }
 
 .mono-badge {
     font-family: var(--font-code);
     font-size: 0.75rem;
-    color: var(--text-faint);
+    color: var(--text-secondary);
 }
 
 .icon-btn {
@@ -188,16 +210,17 @@ body {
     color: var(--text-secondary);
     cursor: pointer;
     margin-left: 0.5rem;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     transition: color 0.2s;
 }
 .icon-btn:hover { color: var(--danger); }
 
-/* Редактор */
+/* Редактор ввода */
 .editor-body {
     flex: 1;
     padding: 1.25rem;
     display: flex;
+    min-height: 0;
 }
 
 textarea#input-text {
@@ -226,18 +249,29 @@ textarea#input-text::placeholder {
     background: var(--bg-subtle);
 }
 
+/* Яркая подсказка запуска */
 .shortcut-hint {
-    font-size: 0.75rem;
-    color: var(--text-faint);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
 }
 
 kbd {
-    background: var(--bg-surface-elevated);
-    border: 1px solid var(--border-dim);
-    border-radius: 4px;
-    padding: 2px 6px;
+    background: #142a20;
+    border: 1px solid var(--mint-muted);
+    border-radius: 5px;
+    padding: 3px 7px;
     font-family: var(--font-code);
+    font-weight: 600;
+    color: var(--mint-bright);
+    box-shadow: 0 0 8px rgba(46, 229, 157, 0.15);
+}
+
+.shortcut-text {
     color: var(--text-secondary);
+    margin-left: 0.2rem;
 }
 
 .action-btn {
@@ -245,8 +279,8 @@ kbd {
     color: #04120a;
     font-family: var(--font-ui);
     font-weight: 700;
-    font-size: 0.85rem;
-    padding: 0.6rem 1.2rem;
+    font-size: 0.88rem;
+    padding: 0.65rem 1.3rem;
     border-radius: 8px;
     border: none;
     cursor: pointer;
@@ -258,31 +292,38 @@ kbd {
 
 .action-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 0 16px var(--mint-glow);
+    box-shadow: 0 0 18px var(--mint-glow);
 }
 
-.pill-btn {
-    background: var(--bg-surface-elevated);
-    border: 1px solid var(--border-active);
+/* Кнопка копирования */
+.highlight-btn {
+    background: #12291f;
+    border: 1px solid var(--mint-bright);
     color: var(--mint-bright);
     font-family: var(--font-code);
-    font-size: 0.75rem;
-    padding: 0.35rem 0.75rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.4rem 0.9rem;
     border-radius: 6px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-    transition: all 0.2s;
+    gap: 0.45rem;
+    box-shadow: 0 0 10px rgba(46, 229, 157, 0.15);
+    transition: all 0.2s ease;
 }
 
-.pill-btn:hover:not(:disabled) {
-    background: rgba(46, 229, 157, 0.15);
-    border-color: var(--mint-bright);
+.highlight-btn:hover:not(:disabled) {
+    background: var(--mint-bright);
+    color: #03120a;
+    box-shadow: 0 0 16px var(--mint-glow);
 }
 
-.pill-btn:disabled {
-    opacity: 0.3;
+.highlight-btn:disabled {
+    opacity: 0.25;
+    border-color: var(--border-dim);
+    color: var(--text-faint);
+    box-shadow: none;
     cursor: not-allowed;
 }
 
@@ -292,6 +333,7 @@ kbd {
     overflow-y: auto;
     padding: 1.25rem;
     position: relative;
+    min-height: 0;
 }
 
 .empty-placeholder {
@@ -307,23 +349,24 @@ kbd {
 }
 
 .splash-symbol {
-    font-size: 2rem;
+    font-size: 2.2rem;
     margin-bottom: 0.5rem;
-    opacity: 0.5;
+    opacity: 0.6;
 }
 
 .result-stream {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.25rem;
 }
 
 .block-label {
     font-family: var(--font-code);
-    font-size: 0.68rem;
+    font-size: 0.72rem;
+    font-weight: 600;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: var(--mint-muted);
+    color: var(--mint-bright);
     margin-bottom: 0.4rem;
     display: block;
 }
@@ -341,16 +384,16 @@ kbd {
 }
 
 .audit-canvas {
-    font-size: 0.88rem;
+    font-size: 0.9rem;
     line-height: 1.6;
-    background: rgba(16, 185, 129, 0.03);
-    border-left: 2px solid var(--mint-muted);
+    background: rgba(16, 185, 129, 0.05);
+    border-left: 3px solid var(--mint-bright);
     padding: 0.85rem 1rem;
     border-radius: 0 8px 8px 0;
     color: var(--text-secondary);
 }
 
-/* Лоадер с анимацией радара */
+/* Оверлей загрузки */
 .loader-overlay {
     position: absolute;
     inset: 0;
@@ -379,7 +422,7 @@ kbd {
 
 .loader-text {
     font-family: var(--font-code);
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     color: var(--text-secondary);
     display: flex;
     flex-direction: column;
@@ -389,20 +432,20 @@ kbd {
 
 .live-clock {
     color: var(--mint-bright);
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: 600;
 }
 
-/* 3. Нижний Док (История) */
+/* Нижнее поле истории */
 .history-dock {
     background: var(--bg-surface);
     border: 1px solid var(--border-dim);
     border-radius: 12px;
-    padding: 0.6rem 1rem;
+    padding: 0.75rem 1.25rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    min-height: 105px;
+    gap: 0.6rem;
+    min-height: 115px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
@@ -413,54 +456,76 @@ kbd {
 }
 
 .dock-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dock-title-text {
     font-family: var(--font-code);
-    font-size: 0.68rem;
-    letter-spacing: 0.06em;
-    color: var(--text-faint);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--mint-bright);
+}
+
+.history-icon {
+    color: var(--mint-bright);
+    font-size: 0.95rem;
+}
+
+/* Кнопка «Обновить» */
+.refresh-action-btn {
+    background: #11261d;
+    border: 1px solid var(--border-active);
+    color: var(--mint-bright);
+    font-family: var(--font-code);
+    font-size: 0.76rem;
+    font-weight: 600;
+    padding: 0.35rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
     display: flex;
     align-items: center;
     gap: 0.4rem;
+    transition: all 0.2s;
 }
 
-.ghost-btn {
-    background: none;
-    border: none;
-    font-family: var(--font-code);
-    font-size: 0.7rem;
-    color: var(--text-faint);
-    cursor: pointer;
-    transition: color 0.2s;
+.refresh-action-btn:hover {
+    border-color: var(--mint-bright);
+    background: #173528;
+    box-shadow: 0 0 10px rgba(46, 229, 157, 0.2);
 }
-.ghost-btn:hover { color: var(--mint-bright); }
 
 .dock-track {
     display: flex;
     gap: 0.75rem;
     overflow-x: auto;
-    padding-bottom: 0.25rem;
+    padding-bottom: 0.4rem;
 }
 
-.dock-track::-webkit-scrollbar { height: 4px; }
-.dock-track::-webkit-scrollbar-thumb { background: var(--border-dim); border-radius: 2px; }
-
+/* Карточки истории с фиксированной шириной */
 .history-chip {
-    flex: 0 0 240px;
+    flex: 0 0 200px;
+    width: 200px;
+    max-width: 200px;
     background: var(--bg-subtle);
     border: 1px solid var(--border-dim);
     border-radius: 8px;
-    padding: 0.5rem 0.75rem;
+    padding: 0.55rem 0.75rem;
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.35rem;
     transition: all 0.2s var(--ease-out);
     position: relative;
 }
 
 .history-chip:hover {
-    border-color: var(--border-active);
+    border-color: var(--mint-muted);
     background: var(--bg-surface-elevated);
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .chip-preview {
@@ -470,28 +535,43 @@ kbd {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding-right: 1rem;
+    padding-right: 1.2rem;
+    display: block;
 }
 
 .chip-meta {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.65rem;
+    font-family: var(--font-code);
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+    margin-top: 0.15rem;
+}
+
+.chip-date {
     color: var(--text-faint);
+}
+
+.chip-time {
+    color: var(--mint-bright);
+    font-weight: 500;
 }
 
 .chip-delete {
     position: absolute;
-    right: 0.5rem;
-    top: 0.4rem;
+    right: 0.45rem;
+    top: 0.35rem;
     background: none;
     border: none;
     color: var(--text-faint);
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     transition: color 0.2s;
 }
-.chip-delete:hover { color: var(--danger); }
+
+.chip-delete:hover {
+    color: var(--danger);
+}
 
 .hidden { display: none !important; }

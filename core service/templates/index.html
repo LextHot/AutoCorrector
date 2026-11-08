@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoCorrector Studio</title>
-    <!-- Подключаем профессиональные шрифты -->
+    <title>AutoCorrector</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,14 +16,14 @@
         <!-- Верхний статус-бар -->
         <header class="top-nav">
             <div class="brand">
-                <span class="brand-glyph">/\\/</span>
+                <span class="brand-glyph">AC</span>
                 <span class="brand-name">AutoCorrector</span>
             </div>
 
             <div class="nav-metrics">
-                <div class="node-status">
-                    <span class="status-dot"></span>
-                    <span class="status-label">LLM-service: Online</span>
+                <div class="node-status" id="llm-status-box">
+                    <span class="status-dot hidden" id="status-dot"></span>
+                    <span class="status-label" id="status-label">LLM: —</span>
                 </div>
                 <div id="runtime-badge" class="badge-telemetry hidden">
                     <span class="badge-icon">⚡</span>
@@ -36,7 +35,7 @@
         <!-- Главное рабочее пространство -->
         <main class="workbench">
 
-            <!-- Левая колонка: Редактор и ввод -->
+            <!-- Левая колонка: Буфер ввода -->
             <section class="panel editor-pane">
                 <div class="pane-header">
                     <span class="pane-title">SOURCE BUFFER</span>
@@ -49,7 +48,7 @@
                 <div class="editor-body">
                     <textarea
                         id="input-text"
-                        placeholder="Вставьте исходный текст для синтаксического и грамматического анализа..."
+                        placeholder="Вставьте исходный текст для глубокого синтаксического и грамматического анализа..."
                         rows="12"
                         maxlength="1000"
                         spellcheck="false"
@@ -58,7 +57,7 @@
 
                 <div class="pane-footer">
                     <div class="shortcut-hint">
-                        <kbd>Ctrl</kbd> + <kbd>Enter</kbd> для запуска
+                        <kbd>Ctrl</kbd> + <kbd>Enter</kbd> <span class="shortcut-text">для запуска</span>
                     </div>
                     <button type="button" id="submit-btn" class="action-btn primary-glow">
                         <span class="btn-text">Отправить на проверку</span>
@@ -67,28 +66,27 @@
                 </div>
             </section>
 
-            <!-- Правая колонка: Результат и инспектор правок -->
+            <!-- Правая колонка: Результат -->
             <section class="panel inspector-pane">
                 <div class="pane-header">
                     <span class="pane-title">RESULT</span>
-                    <button type="button" id="copy-btn" class="pill-btn" disabled>
+                    <button type="button" id="copy-btn" class="pill-btn highlight-btn" disabled>
                         <span class="copy-icon">⎘</span>
                         <span id="copy-btn-text">Скопировать</span>
                     </button>
                 </div>
 
-                <!-- Состояние ожидания / лоадер -->
+                <!-- Лоадер ожидания -->
                 <div id="loader" class="loader-overlay hidden">
                     <div class="pulse-radar"></div>
                     <div class="loader-text">
-                        <span>Выполняется анализ языковой моделью...</span>
+                        <span>Анализ текста моделью...</span>
                         <span id="live-timer" class="live-clock">0.0s</span>
                     </div>
                 </div>
 
-                <!-- Контент результатов -->
+                <!-- Блок вывода результата -->
                 <div id="result-view" class="inspector-body empty-placeholder">
-
                     <div id="idle-splash" class="idle-splash">
                         <div class="splash-symbol">⌘</div>
                         <p>Ожидание входных данных. Введите текст слева и нажмите отправку для получения исправлений.</p>
@@ -96,7 +94,7 @@
 
                     <div id="result-data" class="result-stream hidden">
                         <div class="stream-block">
-                            <label class="block-label">Исправленный вариант</label>
+                            <label class="block-label">Исправленный текст</label>
                             <div class="text-canvas" id="corrected-output"></div>
                         </div>
 
@@ -105,25 +103,24 @@
                             <div class="audit-canvas" id="explanation-output"></div>
                         </div>
                     </div>
-
                 </div>
             </section>
-
         </main>
 
-        <!-- Нижняя консоль: История -->
+        <!-- Нижняя консоль: История запросов -->
         <footer class="history-dock">
             <div class="dock-header">
                 <div class="dock-title">
                     <span class="history-icon">◷</span>
-                    <span>История запрсоов</span>
+                    <span class="dock-title-text">ИСТОРИЯ ЗАПРОСОВ</span>
                 </div>
-                <button type="button" id="refresh-history-btn" class="ghost-btn">Обновить</button>
+                <button type="button" id="refresh-history-btn" class="refresh-action-btn">
+                    <span class="refresh-icon">↻</span>
+                    <span>Обновить</span>
+                </button>
             </div>
 
-            <div class="dock-track" id="history-list">
-                <!-- Динамические карточки истории будут горизонтальной лентой/чипами -->
-            </div>
+            <div class="dock-track" id="history-list"></div>
         </footer>
     </div>
 
