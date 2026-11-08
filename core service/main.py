@@ -6,6 +6,7 @@ from schemas import OriginalText, CorrectedText
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
 import httpx
+from sqlalchemy import select, desc
 
 # Функция для автосоздания файла БД при старте приложения
 @asynccontextmanager
@@ -46,3 +47,10 @@ async def create_correction(payload: OriginalText, db: AsyncSession = Depends(ge
     await db.commit()
     await db.refresh(record)
     return record
+
+# GET-request для получения истории проверок
+@app.get("/api/corrections")
+async def get_history(limit: int = 50, offset: int = 0, db: AsyncSession = Depends(get_db)) -> list[CorrectedText]:
+    query = select(CorrectionHistory).order_by(desc(CorrectionHistory.created_at)).offset(offset).limit(limit)
+    result = await db.execute(query)
+    return result.scalars().all()
