@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Request
 from database import engine
 from db_model import Base, CorrectionHistory
 from schemas import OriginalText, CorrectedText
@@ -7,6 +7,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
 import httpx
 from sqlalchemy import select, desc
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 # Функция для автосоздания файла БД при старте приложения
 @asynccontextmanager
@@ -21,6 +24,17 @@ async def lifespan(app: FastAPI):
 # Создание экземпляра веб-сервиса
 app = FastAPI(title="AutoCorrector Core API", lifespan=lifespan)
 
+# Смонтировать статические файлы .css и .js
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Инициализировать шаблонизатор Jinja2
+templates = Jinja2Templates(directory="templates")
+
+# Эндпоинт главной страницы веб-интерфейса
+@app.get("/", response_class=HTMLResponse)
+async def read_root(request: Request):
+    return templates.TemplateResponse(request=request, name="index.html")
+
 # URL сервиса LLM для коррекции исходного текста, реализованного в .\llm service
 LLM_SERVICE_URL = "http://127.0.0.1:8001/correction"
 
@@ -29,7 +43,7 @@ LLM_SERVICE_URL = "http://127.0.0.1:8001/correction"
 async def create_correction(payload: OriginalText, db: AsyncSession = Depends(get_db)) -> CorrectedText:
     try:
         # Установить таймаут
-        timeout = httpx.Timeout(connect=5.0, read=90.0, write=10.0, pool=10.0)
+        timeout = httpx.Timeout(connect=5.0, read=150.0, write=10.0, pool=10.0)
         # Отправить запрос на LLM-сервис и получить в ответ всю информацию
         async with httpx.AsyncClient(timeout=timeout) as client:
             response = await client.post(LLM_SERVICE_URL, json={"text": payload.text})

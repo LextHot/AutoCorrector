@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoCorrector Studio</title>
+    <!-- Подключаем профессиональные шрифты -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="background-grid"></div>
+
+    <div class="app-shell">
+        <!-- Верхний статус-бар -->
+        <header class="top-nav">
+            <div class="brand">
+                <span class="brand-glyph">/\\/</span>
+                <span class="brand-name">AutoCorrector</span>
+            </div>
+
+            <div class="nav-metrics">
+                <div class="node-status">
+                    <span class="status-dot"></span>
+                    <span class="status-label">LLM-service: Online</span>
+                </div>
+                <div id="runtime-badge" class="badge-telemetry hidden">
+                    <span class="badge-icon">⚡</span>
+                    <span id="runtime-val">0.0s</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Главное рабочее пространство -->
+        <main class="workbench">
+
+            <!-- Левая колонка: Редактор и ввод -->
+            <section class="panel editor-pane">
+                <div class="pane-header">
+                    <span class="pane-title">SOURCE BUFFER</span>
+                    <div class="pane-actions">
+                        <span id="char-counter" class="mono-badge">0 / 1000</span>
+                        <button type="button" id="clear-btn" class="icon-btn" title="Очистить буфер">✕</button>
+                    </div>
+                </div>
+
+                <div class="editor-body">
+                    <textarea
+                        id="input-text"
+                        placeholder="Вставьте исходный текст для синтаксического и грамматического анализа..."
+                        rows="12"
+                        maxlength="1000"
+                        spellcheck="false"
+                        required></textarea>
+                </div>
+
+                <div class="pane-footer">
+                    <div class="shortcut-hint">
+                        <kbd>Ctrl</kbd> + <kbd>Enter</kbd> для запуска
+                    </div>
+                    <button type="button" id="submit-btn" class="action-btn primary-glow">
+                        <span class="btn-text">Отправить на проверку</span>
+                        <span class="btn-arrow">→</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Правая колонка: Результат и инспектор правок -->
+            <section class="panel inspector-pane">
+                <div class="pane-header">
+                    <span class="pane-title">RESULT</span>
+                    <button type="button" id="copy-btn" class="pill-btn" disabled>
+                        <span class="copy-icon">⎘</span>
+                        <span id="copy-btn-text">Скопировать</span>
+                    </button>
+                </div>
+
+                <!-- Состояние ожидания / лоадер -->
+                <div id="loader" class="loader-overlay hidden">
+                    <div class="pulse-radar"></div>
+                    <div class="loader-text">
+                        <span>Выполняется анализ языковой моделью...</span>
+                        <span id="live-timer" class="live-clock">0.0s</span>
+                    </div>
+                </div>
+
+                <!-- Контент результатов -->
+                <div id="result-view" class="inspector-body empty-placeholder">
+
+                    <div id="idle-splash" class="idle-splash">
+                        <div class="splash-symbol">⌘</div>
+                        <p>Ожидание входных данных. Введите текст слева и нажмите отправку для получения исправлений.</p>
+                    </div>
+
+                    <div id="result-data" class="result-stream hidden">
+                        <div class="stream-block">
+                            <label class="block-label">Исправленный вариант</label>
+                            <div class="text-canvas" id="corrected-output"></div>
+                        </div>
+
+                        <div class="stream-block">
+                            <label class="block-label">Пояснения модели</label>
+                            <div class="audit-canvas" id="explanation-output"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Нижняя консоль: История -->
+        <footer class="history-dock">
+            <div class="dock-header">
+                <div class="dock-title">
+                    <span class="history-icon">◷</span>
+                    <span>История запрсоов</span>
+                </div>
+                <button type="button" id="refresh-history-btn" class="ghost-btn">Обновить</button>
+            </div>
+
+            <div class="dock-track" id="history-list">
+                <!-- Динамические карточки истории будут горизонтальной лентой/чипами -->
+            </div>
+        </footer>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

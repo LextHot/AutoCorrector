@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field, ConfigDict
 
 # Входные данные от клиента
 class OriginalText(BaseModel):
-    text: str = Field(min_length=1, max_length=5000, description="Исходный текст")
+    text: str = Field(min_length=1, max_length=1000, description="Исходный текст")
 
 # Выходные данные для выдачи клиенту
 class CorrectedText(BaseModel):

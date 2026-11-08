@@ -16,7 +16,7 @@ MODEL = "qwen2.5:7b"
 
 # Схема данных запроса к LLM
 class CorrectionRequest(BaseModel):
-    text: str = Field(..., min_length=1, max_length=5000, description="Исходный текст для проверки")
+    text: str = Field(..., min_length=1, max_length=1000, description="Исходный текст для проверки")
 
 # Схема данных ответа от LLM
 class CorrectionResult(BaseModel):
@@ -50,7 +50,7 @@ async def correct_text(payload: CorrectionRequest) -> CorrectionResult:
 
     try:
         # Установить таймаут
-        timeout = httpx.Timeout(connect=5.0, read=90.0, write=10.0, pool=10.0)
+        timeout = httpx.Timeout(connect=5.0, read=150.0, write=10.0, pool=10.0)
 
         # Отправить запрос в LLM и получить в ответ всю информацию
         async with httpx.AsyncClient(timeout=timeout) as client:
