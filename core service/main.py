@@ -69,3 +69,13 @@ async def delete_correction(record_id: int, db: AsyncSession = Depends(get_db)):
     await db.delete(record)
     await db.commit()
     return None
+
+# GET-request для получения одной записи по ID
+@app.get("/api/corrections/{record_id}")
+async def get_correction_by_id(record_id: int, db: AsyncSession = Depends(get_db)) -> CorrectedText:
+    # Найти конкретную запись в истории запросов по ID
+    record = await db.get(CorrectionHistory, record_id)
+    # Выкинуть исключение, если записи нет
+    if not record:
+        raise HTTPException(status_code=404, detail="Запись не найдена")
+    return record
