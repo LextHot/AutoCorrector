@@ -7,11 +7,13 @@ import json
 import httpx
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
+import os
 
 app = FastAPI(title="LLM service")
 
 # Задаем URL обращения к модели Ollama и какую модель используем
-OLLAMA_API_URL = "http://localhost:11434/api/generate"
+OLLAMA_BASE_URL = os.getenv("OLLAMA_HOST", "http://localhost:11434")
+OLLAMA_API_URL = f"{OLLAMA_BASE_URL}/api/generate"
 MODEL = "qwen2.5:7b"
 
 # Схема данных запроса к LLM

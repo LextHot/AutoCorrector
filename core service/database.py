@@ -1,8 +1,9 @@
 from typing import AsyncGenerator
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+import os
 
 # Директория нахождения файла БД
-DATABASE = "sqlite+aiosqlite:///./autocorrector.db"
+DATABASE = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./autocorrector.db")
 
 # Инициализировать асинхронный движок
 engine = create_async_engine(DATABASE, echo=True, connect_args={"check_same_thread": False})

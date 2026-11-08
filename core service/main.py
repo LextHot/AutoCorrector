@@ -10,6 +10,7 @@ from sqlalchemy import select, desc
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+import os
 
 # Функция для автосоздания файла БД при старте приложения
 @asynccontextmanager
@@ -36,7 +37,7 @@ async def read_root(request: Request):
     return templates.TemplateResponse(request=request, name="index.html")
 
 # URL сервиса LLM для коррекции исходного текста, реализованного в .\llm service
-LLM_SERVICE_URL = "http://127.0.0.1:8001/correction"
+LLM_SERVICE_URL = os.getenv("LLM_SERVICE_URL", "http://127.0.0.1:8001/correction")
 
 # POST-request для отправки исходного текста на проверку
 @app.post("/api/corrections")

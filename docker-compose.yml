@@ -1,0 +1,45 @@
+services:
+  # Микросервис генерации и взаимодействия с Ollama
+  llm_service:
+    build:
+      context: ./llm service
+      dockerfile: Dockerfile
+    container_name: autocorrector_llm
+    ports:
+      - "8001:8001"
+    environment:
+      # Связь с Ollama, запущенной локально
+      - OLLAMA_HOST=http://host.docker.internal:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    networks:
+      - autocorrector_net
+
+  # Core-сервис
+  core_service:
+    build:
+      context: ./core service
+      dockerfile: Dockerfile
+    container_name: autocorrector_core
+    ports:
+      - "8000:8000"
+    environment:
+      # Обращение к соседнему контейнеру по имени сервиса в Docker-сети
+      - LLM_SERVICE_URL=http://llm_service:8001/correction
+      - DATABASE_URL=sqlite+aiosqlite:////app/data/autocorrector.db
+    volumes:
+      # Сохранить файл БД на хосте
+      - autocorrector_db_data:/app/data
+    depends_on:
+      - llm_service
+    restart: unless-stopped
+    networks:
+      - autocorrector_net
+
+volumes:
+  autocorrector_db_data:
+
+networks:
+  autocorrector_net:
+    driver: bridge
